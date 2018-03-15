@@ -9,7 +9,7 @@ import java.awt.*;
 
 import static epsi.archi.mvc.util.GridBagContraintsUtil.*;
 
-public class ConverterView {
+public class ConverterView implements Observer {
 
     private JTextField amount;
     private JButton convert;
@@ -30,6 +30,9 @@ public class ConverterView {
 
     public ConverterView(Model model) {
         buildIHM();
+        controller = new ConverterController(model, this);
+        model.addObserver(this);
+        update(model);
 
     }
 
@@ -129,5 +132,20 @@ public class ConverterView {
         mainPanel.add(buildFooterPanel(), gridBagConstraints(0, 3, 1.0, 0.0, GridBagConstraints.BOTH));
 
         return mainPanel;
+    }
+
+    public void update(Model model) {
+        double modelAmount = model.getAmount();
+        amount.setText(String.valueOf(modelAmount));
+        usd.setText(String.valueOf(modelAmount * model.getUsdChangeRate()));
+        gbp.setText(String.valueOf(modelAmount * model.getGbpChangeRate()));
+        jpy.setText(String.valueOf(modelAmount * model.getJpyChangeRate()));
+        chf.setText(String.valueOf(modelAmount * model.getChfChangeRate()));
+    }
+
+    @Override
+    public void update(Observable observable) {
+        if( observable instanceof Model)
+            update((Model) observable );
     }
 }

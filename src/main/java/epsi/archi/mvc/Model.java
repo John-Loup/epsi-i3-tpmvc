@@ -1,12 +1,19 @@
 package epsi.archi.mvc;
 
-public class Model {
+import epsi.archi.mvc.util.Observable;
+import epsi.archi.mvc.util.Observer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Model implements Observable {
 
     private Double amount = 0.0;
     private Double usdChangeRate = 1.23072;
     private Double gbpChangeRate = 0.88855;
     private Double jpyChangeRate = 131.431;
     private Double chfChangeRate = 1.17071;
+    private ArrayList<Observer> observers = new ArrayList<>();
 
     public Double getAmount() {
         return amount;
@@ -14,6 +21,7 @@ public class Model {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+        notifyObservers();
     }
 
     public Double getUsdChangeRate() {
@@ -46,5 +54,21 @@ public class Model {
 
     public void setChfChangeRate(Double chfChangeRate) {
         this.chfChangeRate = chfChangeRate;
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers)
+            o.update(this);
     }
 }

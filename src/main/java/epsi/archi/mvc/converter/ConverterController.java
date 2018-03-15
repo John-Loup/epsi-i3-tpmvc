@@ -20,6 +20,11 @@ public class ConverterController {
     }
 
     public void bind() {
-
+        view.getConvert().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.setAmount(Double.valueOf(view.getAmount().getText()));
+            }
+        });
     }
 }
